@@ -1,0 +1,54 @@
+<div class="jumbotron">
+
+    <form name="contatoForm">
+        <input class="form-control" type="text" ng-model="contato.nome" name="nome" required ng-pattern="/^[a-zà-úA-ZÀ-Ú\s-']{3,30}$/" placeholder="Nome" ui-name/>
+        <input class="form-control" type="text" ng-model="contato.telefone" name="telefone" required minlength="14" placeholder="Telefone" ui-phone/>
+        <input class="form-control" type="text" ng-model="contato.data" name="data" required minlength="10" placeholder="Data" ui-date/>
+        <select class="form-control" ng-model="contato.operadora" name="operadora" required ng-options="operadora.nome + ' ( ' + (operadora.preco | currency) + ' )' group by operadora.categoria for operadora in operadoras | orderBy:'nome'">
+            <option value=""> Selecione uma operadora</option>
+        </select>
+        <select class="form-control" ng-model="contato.cor" name="cor" required ng-options="cor.nome for cor in cores">
+            <option value=""> Selecione uma cor</option>
+        </select>
+    </form>
+    
+    <!--ng-minlength="14" ng-maxlength="15" required ng-pattern="/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/" ng-pattern="/^[a-zà-úA-ZÀ-Ú\s]{3,30}$/" -->
+    <div ng-show="!contatoForm.$valid">
+    
+        <div ng-show="!contatoForm.$valid">
+    
+            <div ng-show="contatoForm.nome.$dirty && !contatoForm.nome.$valid">
+                <ui-alert title="Aviso" ng-show="verificaNome()">
+                    {{errorNome}}
+                </ui-alert>
+            </div>
+    
+            <div ng-show="contatoForm.telefone.$dirty && !contatoForm.telefone.$valid">
+                <ui-alert title="Aviso" ng-show="verificaPhone()">
+                    {{errorPhone}}
+                </ui-alert>
+            </div>
+    
+            <div ng-show="contatoForm.data.$dirty && !contatoForm.data.$valid">
+                <ui-alert title="Aviso" ng-show="verificaData()">
+                    {{errorData}}
+                </ui-alert>
+            </div>
+    
+            <div ng-show="contatoForm.operadora.$dirty">
+                <ui-alert title="Aviso" ng-show="!contatoForm.operadora.$valid">
+                    Selecione uma operadora!
+                </ui-alert>
+            </div>
+    
+            <div ng-show="contatoForm.cor.$dirty">
+                <ui-alert title="Aviso" ng-show="!contatoForm.cor.$valid">
+                    Selecione uma cor!
+                </ui-alert>
+            </div>
+    
+        </div>
+        <!-- {{contato}} -->
+    </div>
+    <button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="!contatoForm.$valid">Adicionar Contato</button>
+</div>

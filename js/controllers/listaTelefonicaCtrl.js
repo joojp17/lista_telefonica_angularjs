@@ -1,29 +1,17 @@
-angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($scope, contatosAPI, operadorasAPI, coresAPI, serialGenerator) {
+angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($scope, contatos, operadoras, cores, serialGenerator) {
     $scope.app = "Lista Telefonica";
-    $scope.contatos = [];
-    $scope.operadoras = [];
-    $scope.cores = [];
+    $scope.contatos = $scope.contatos = contatos.filter(function (contato){
+        if (!contato.selecionado) return contato;
+    });
+    $scope.operadoras = operadoras;
+    $scope.cores = cores;
 
-    var carregarContatos = function (){
-        $scope.contatos = contatosAPI.getContatos();
-        //if(!$scope.contatos.length) return $scope.error = "Não foi possível carregar os dados!";
-    }
-
-    var carregarOperadoras = function(){
-        $scope.operadoras = operadorasAPI.getOperadoras();
-    }
-
-    var carregarCores = function(){
-        $scope.cores = coresAPI.getCores();
-    }
-    
-    $scope.adicionarContato = function (contato) {
-        contato.serial = serialGenerator.generate();
-        //contato.data = new Date();
-        contatosAPI.saveContato(contato);
-        delete $scope.contato;
-        $scope.contatoForm.$setPristine();
-        carregarContatos();
+    var generateSerial = function(contatos){
+        if(contatos){
+            contatos.forEach(function(item){
+                item.serial = serialGenerator.generate();
+            });
+        }
     };
 
     $scope.apagarContatos = function (contatos){
@@ -43,6 +31,5 @@ angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($s
         $scope.direcaoDaOrdenacao = !$scope.direcaoDaOrdenacao;
     };
 
-    window.onload = carregarContatos(), carregarOperadoras(), carregarCores();
-    
+    generateSerial($scope.contatos);
 });
